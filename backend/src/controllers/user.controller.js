@@ -40,7 +40,7 @@ const register = async (req,res)=>{
     try{
         const existingUser = await User.findOne({username});
         if(existingUser){
-            return res.status(httpStatus.FOUND).json({Message:"user already exists"});
+            return res.status(httpStatus.FOUND).json({message:"user already exists"});
         }
 
                const hashedPassword = await bcrypt.hash(password , 10);
