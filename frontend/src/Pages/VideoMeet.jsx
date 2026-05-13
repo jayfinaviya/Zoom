@@ -1,6 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react'
-
+import io from "socket.io-client";
 import styles from "../styles/videoComponent.module.css";
+import { Badge, IconButton, TextField } from '@mui/material';
+import { Button } from '@mui/material';
+import VideocamIcon from '@mui/icons-material/Videocam';
+import VideocamOffIcon from '@mui/icons-material/VideocamOff'
 
 const server_url = "http://localhost:8000";
 
@@ -54,11 +58,6 @@ export default function VideoMeet() {
     // }
 
 
-     useEffect(() => {
-        console.log("HELLO")
-        getPermissions();
-
-    })
 
 
      const getPermissions = async () => {
@@ -99,12 +98,31 @@ export default function VideoMeet() {
              } catch (error) {
             console.log(error);
         }
-    };
+    }
+    useEffect(() => {
+        getPermissions();
+
+    },[])
 
     
   return (
     <div>
-      
+          {askForUsername === true ?
+
+                <div>
+
+
+                    <h2>Enter into Lobby </h2>
+                    <TextField id="outlined-basic" label="Username" value={username} onChange={e => setUsername(e.target.value)} variant="outlined" />
+                    <Button variant="contained">Connect</Button>
+
+
+                    <div>
+                        <video ref={localVideoref} autoPlay muted></video>
+                    </div>
+                    
+                    </div> : <></>
+          }
     </div>
   )
 }
