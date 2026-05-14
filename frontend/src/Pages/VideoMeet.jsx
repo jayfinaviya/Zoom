@@ -187,6 +187,16 @@ export default function VideoMeet() {
         }
     }, [video, audio])
 
+    const addMessage = (data, sender, socketIdSender) => {
+        setMessages((prevMessages) => [
+            ...prevMessages,
+            { sender: sender, data: data }
+        ]);
+        if (socketIdSender !== socketIdRef.current) {
+            setNewMessages((prevNewMessages) => prevNewMessages + 1);
+        }
+    };
+
      let connectToSocketServer = () => {
         socketRef.current = io.connect(server_url, { secure: false })
 
@@ -318,24 +328,8 @@ export default function VideoMeet() {
         let stream = canvas.captureStream()
         return Object.assign(stream.getVideoTracks()[0], { enabled: false })
     }
-
-   
-
     
-      let handleEndCall = () => {
-
-      }
-
-       let sendMessage = () => {
-
-       }
-
-
-     const addMessage = (data, sender, socketIdSender) => {
-     }
-
      
-
     let getMedia = () => {
         setVideo(videoAvailable);
         setAudio(audioAvailable);
@@ -416,6 +410,22 @@ export default function VideoMeet() {
     }, [screen])
      let handleScreen = () => {
         setScreen(!screen);
+    }
+
+     let sendMessage = () => {
+          console.log(socketRef.current);
+        socketRef.current.emit('chat-message', message, username)
+        setMessage("");
+
+        // this.setState({ message: "", sender: username })
+       }
+
+       let handleEndCall = () => {
+        try {
+            let tracks = localVideoref.current.srcObject.getTracks()
+            tracks.forEach(track => track.stop())
+        } catch (e) { }
+        window.location.href = "/"
     }
 
    return (
