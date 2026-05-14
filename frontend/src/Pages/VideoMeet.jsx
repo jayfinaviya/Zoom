@@ -142,9 +142,9 @@ export default function VideoMeet() {
                 tracks.forEach(track => track.stop())
             } catch (e) { console.log(e) }
 
-            // let blackSilence = (...args) => new MediaStream([black(...args), silence()])
-            // window.localStream = blackSilence()
-            // localVideoref.current.srcObject = window.localStream
+            let blackSilence = (...args) => new MediaStream([black(...args), silence()])
+            window.localStream = blackSilence()
+            localVideoref.current.srcObject = window.localStream
 
             for (let id in connections) {
                 connections[id].addStream(window.localStream)
@@ -297,6 +297,12 @@ export default function VideoMeet() {
       }
 
     let silence = () => {
+       let ctx = new AudioContext()
+        let oscillator = ctx.createOscillator()
+        let dst = oscillator.connect(ctx.createMediaStreamDestination())
+        oscillator.start()
+        ctx.resume()
+        return Object.assign(dst.stream.getAudioTracks()[0], { enabled: false })
     }
 
      const addMessage = (data, sender, socketIdSender) => {
@@ -333,7 +339,10 @@ export default function VideoMeet() {
                         <video ref={localVideoref} autoPlay muted></video>
                     </div>
                     
-                    </div> : <></>
+                    </div> : <>
+                       
+                        <video ref={localVideoref}></video>
+                    </>
           }
     </div>
   )
