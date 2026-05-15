@@ -8,7 +8,7 @@ import { connectToSocket } from "./controllers/SocketManager.js";
 
 import cors from "cors";
 
-import userRoutes from "./routes/users.routes.js";
+import userRoutes from "./Routes/users.routes.js";
 
 
 
